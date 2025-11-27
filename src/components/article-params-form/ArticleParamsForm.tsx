@@ -42,49 +42,51 @@ export const ArticleParamsForm = () => {
 	return (
 		<>
 			<ArrowButton isOpen={isOpen} onClick={handleToggle} />
-			<aside className={styles.container}>
-				<form className={styles.form} onSubmit={handleSubmit}>
-					<Text size={31} weight={800} uppercase>
-						Задайте параметры
-					</Text>
-					<Select
-						options={fontFamilyOptions}
-						selected={newFontFamilyOptions}
-						title='шрифт'
-						onChange={setNewFontFamilyOption}
-					/>
-					<RadioGroup
-						selected={newFontSize}
-						name='radio'
-						onChange={setNewFontSize}
-						options={fontSizeOptions}
-						title='размер шрифта'
-					/>
-					<Select
-						options={fontColors}
-						selected={newFontColor}
-						title='цвет шрифта'
-						onChange={setNewFontColor}
-					/>
-					<Separator />
-					<Select
-						options={backgroundColors}
-						selected={newBackgroundColor}
-						title='цвет фона'
-						onChange={setNewBackgroundColor}
-					/>
-
-					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
-							onClick={handleReset}
+			{isOpen && (
+				<aside className={styles.container}>
+					<form className={styles.form} onSubmit={handleSubmit}>
+						<Text size={31} weight={800} uppercase>
+							Задайте параметры
+						</Text>
+						<Select
+							options={fontFamilyOptions}
+							selected={newFontFamilyOptions}
+							title='шрифт'
+							onChange={setNewFontFamilyOption}
 						/>
-						<Button title='Применить' htmlType='submit' type='apply' />
-					</div>
-				</form>
-			</aside>
+						<RadioGroup
+							selected={newFontSize}
+							name='radio'
+							onChange={setNewFontSize}
+							options={fontSizeOptions}
+							title='размер шрифта'
+						/>
+						<Select
+							options={fontColors}
+							selected={newFontColor}
+							title='цвет шрифта'
+							onChange={setNewFontColor}
+						/>
+						<Separator />
+						<Select
+							options={backgroundColors}
+							selected={newBackgroundColor}
+							title='цвет фона'
+							onChange={setNewBackgroundColor}
+						/>
+
+						<div className={styles.bottomContainer}>
+							<Button
+								title='Сбросить'
+								htmlType='reset'
+								type='clear'
+								onClick={handleReset}
+							/>
+							<Button title='Применить' htmlType='submit' type='apply' />
+						</div>
+					</form>
+				</aside>
+			)}
 		</>
 	);
 };
