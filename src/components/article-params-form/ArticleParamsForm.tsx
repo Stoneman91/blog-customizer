@@ -17,11 +17,27 @@ import { Separator } from 'src/ui/separator';
 export const ArticleParamsForm = () => {
 	const [isOpen, setIsOpen] = useState(false);
 
+	const [newFontFamilyOptions, setNewFontFamilyOption] = useState(
+		fontFamilyOptions[0]
+	);
+	const [newFontSize, setNewFontSize] = useState(fontSizeOptions[0]);
+	const [newFontColor, setNewFontColor] = useState(fontColors[0]);
+	const [newBackgroundColor, setNewBackgroundColor] = useState(
+		backgroundColors[0]
+	);
+
 	const handleToggle = () => {
 		setIsOpen(!isOpen);
 	};
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+	};
+
+	const handleReset = () => {
+		setNewFontFamilyOption(fontFamilyOptions[0]);
+		setNewFontSize(fontSizeOptions[0]);
+		setNewFontColor(fontColors[0]);
+		setNewBackgroundColor(backgroundColors[0]);
 	};
 	return (
 		<>
@@ -59,7 +75,12 @@ export const ArticleParamsForm = () => {
 					/>
 
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' htmlType='reset' type='clear' />
+						<Button
+							title='Сбросить'
+							htmlType='reset'
+							type='clear'
+							onClick={handleReset}
+						/>
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
