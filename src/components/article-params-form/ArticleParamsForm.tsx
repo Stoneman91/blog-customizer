@@ -15,7 +15,7 @@ import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 
 export const ArticleParamsForm = () => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(true);
 
 	const [newFontFamilyOptions, setNewFontFamilyOption] = useState(
 		fontFamilyOptions[0]
@@ -29,6 +29,7 @@ export const ArticleParamsForm = () => {
 	const handleToggle = () => {
 		setIsOpen(!isOpen);
 	};
+
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 	};
