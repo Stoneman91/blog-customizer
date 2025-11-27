@@ -7,16 +7,17 @@ import styles from './ArticleParamsForm.module.scss';
 import { Select } from 'src/ui/select';
 import {
 	backgroundColors,
+	contentWidthArr,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
 } from 'src/constants/articleProps';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
+import { clsx } from 'clsx';
 
 export const ArticleParamsForm = () => {
 	const [isOpen, setIsOpen] = useState(true);
-
 	const [newFontFamilyOptions, setNewFontFamilyOption] = useState(
 		fontFamilyOptions[0]
 	);
@@ -25,6 +26,7 @@ export const ArticleParamsForm = () => {
 	const [newBackgroundColor, setNewBackgroundColor] = useState(
 		backgroundColors[0]
 	);
+	const [newContentWidt, setNewContentWidth] = useState(contentWidthArr[0]);
 
 	const handleToggle = () => {
 		setIsOpen(!isOpen);
@@ -44,7 +46,10 @@ export const ArticleParamsForm = () => {
 		<>
 			<ArrowButton isOpen={isOpen} onClick={handleToggle} />
 			{isOpen && (
-				<aside className={styles.container}>
+				<aside
+					className={clsx(styles.container, {
+						[styles.container_open]: isOpen,
+					})}>
 					<form className={styles.form} onSubmit={handleSubmit}>
 						<Text size={31} weight={800} uppercase>
 							Задайте параметры
@@ -75,7 +80,12 @@ export const ArticleParamsForm = () => {
 							title='цвет фона'
 							onChange={setNewBackgroundColor}
 						/>
-
+						<Select
+							options={contentWidthArr}
+							selected={newContentWidt}
+							title='ширина контента'
+							onChange={setNewContentWidth}
+						/>
 						<div className={styles.bottomContainer}>
 							<Button
 								title='Сбросить'
