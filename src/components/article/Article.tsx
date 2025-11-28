@@ -4,6 +4,22 @@ import { Text } from 'src/ui/text';
 
 import styles from './Article.module.scss';
 
+import {
+	fontFamilyOptions,
+	fontSizeOptions,
+	fontColors,
+	backgroundColors,
+	contentWidthArr,
+} from 'src/constants/articleProps';
+
+export type ArticleState = {
+	fontFamilyOption: (typeof fontFamilyOptions)[0];
+	fontSizeOption: (typeof fontSizeOptions)[0];
+	fontColor: (typeof fontColors)[0];
+	backgroundColor: (typeof backgroundColors)[0];
+	contentWidth: (typeof contentWidthArr)[0];
+};
+
 export const Article = () => {
 	return (
 		<article className={styles.article}>

@@ -2,27 +2,12 @@ import { createRoot } from 'react-dom/client';
 import { StrictMode, CSSProperties, useState } from 'react';
 import clsx from 'clsx';
 
-import { Article } from './components/article/Article';
+import { Article, ArticleState } from './components/article/Article';
 import { ArticleParamsForm } from './components/article-params-form/ArticleParamsForm';
-import {
-	backgroundColors,
-	contentWidthArr,
-	defaultArticleState,
-	fontColors,
-	fontFamilyOptions,
-	fontSizeOptions,
-} from './constants/articleProps';
+import { defaultArticleState } from './constants/articleProps';
 
 import './styles/index.scss';
 import styles from './styles/index.module.scss';
-
-export type ArticleState = {
-	fontFamilyOption: (typeof fontFamilyOptions)[0];
-	fontSizeOption: (typeof fontSizeOptions)[0];
-	fontColor: (typeof fontColors)[0];
-	backgroundColor: (typeof backgroundColors)[0];
-	contentWidth: (typeof contentWidthArr)[0];
-};
 
 const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
@@ -30,10 +15,6 @@ const root = createRoot(domNode);
 const App = () => {
 	const [articleState, setArticleState] =
 		useState<ArticleState>(defaultArticleState);
-
-	const handleApply = (newState: ArticleState) => {
-		setArticleState(newState);
-	};
 
 	return (
 		<main
@@ -47,7 +28,10 @@ const App = () => {
 					'--bg-color': articleState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm articleState={articleState} onApply={handleApply} />
+			<ArticleParamsForm
+				articleState={articleState}
+				onApply={setArticleState}
+			/>
 
 			<Article />
 		</main>
