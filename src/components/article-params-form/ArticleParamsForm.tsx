@@ -1,4 +1,3 @@
-// ArticleParamsForm.tsx
 import { useState, useRef, useEffect } from 'react';
 import styles from './ArticleParamsForm.module.scss';
 import {
@@ -7,8 +6,8 @@ import {
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
+	defaultArticleState,
 } from 'src/constants/articleProps';
-import { clsx } from 'clsx';
 import { ArticleState } from '../article/Article';
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
@@ -26,26 +25,27 @@ export const ArticleParamsForm = ({
 	articleState,
 	onApply,
 }: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [formState, setFormState] = useState(articleState);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
+		if (!isFormOpen) return;
+
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
-				isOpen &&
 				sidebarRef.current &&
 				!sidebarRef.current.contains(event.target as Node)
 			) {
-				setIsOpen(false);
+				setIsFormOpen(false);
 			}
 		};
 
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, [isOpen]);
+	}, [isFormOpen]);
 
-	const handleToggle = () => setIsOpen(!isOpen);
+	const handleToggle = () => setIsFormOpen(!isFormOpen);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -53,26 +53,25 @@ export const ArticleParamsForm = ({
 	};
 
 	const handleReset = () => {
-		const defaultState = {
-			fontFamilyOption: fontFamilyOptions[0],
-			fontSizeOption: fontSizeOptions[0],
-			fontColor: fontColors[0],
-			backgroundColor: backgroundColors[0],
-			contentWidth: contentWidthArr[0],
-		};
-		setFormState(defaultState);
-		onApply(defaultState);
+		setFormState(defaultArticleState);
+		onApply(defaultArticleState);
 	};
 
-	const updateField = (field: keyof ArticleState) => (value: any) => {
-		setFormState((prev) => ({ ...prev, [field]: value }));
-	};
+	const updateField =
+		(field: keyof ArticleState) =>
+		(value: ArticleState[keyof ArticleState]) => {
+			setFormState((prev) => ({ ...prev, [field]: value }));
+		};
 
 	return (
 		<div ref={sidebarRef}>
-			<ArrowButton isOpen={isOpen} onClick={handleToggle} />
+			<ArrowButton isOpen={isFormOpen} onClick={handleToggle} />
 			<aside
-				className={clsx(styles.container, isOpen && styles.container_open)}>
+				className={
+					isFormOpen
+						? `${styles.container} ${styles.container_open}`
+						: styles.container
+				}>
 				<form className={styles.form} onSubmit={handleSubmit}>
 					<Text size={31} weight={800} uppercase>
 						Задайте параметры
