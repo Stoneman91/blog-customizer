@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 import { Text } from 'src/ui/text';
@@ -16,17 +16,46 @@ import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 import { clsx } from 'clsx';
 
-export const ArticleParamsForm = () => {
-	const [isOpen, setIsOpen] = useState(true);
-	const [newFontFamilyOptions, setNewFontFamilyOption] = useState(
-		fontFamilyOptions[0]
+type ArticleParamsFormProps = {
+	articleState: {
+		fontFamilyOption: (typeof fontFamilyOptions)[0];
+		fontSizeOption: (typeof fontSizeOptions)[0];
+		fontColor: (typeof fontColors)[0];
+		backgroundColor: (typeof backgroundColors)[0];
+		contentWidth: (typeof contentWidthArr)[0];
+	};
+	onApply: (newState: ArticleParamsFormProps['articleState']) => void;
+};
+
+export const ArticleParamsForm = ({
+	articleState,
+	onApply,
+}: ArticleParamsFormProps) => {
+	const [isOpen, setIsOpen] = useState(false);
+	const [fontFamily, setFontFamily] = useState(articleState.fontFamilyOption);
+	const [fontSize, setFontSize] = useState(articleState.fontSizeOption);
+	const [fontColor, setFontColor] = useState(articleState.fontColor);
+	const [backgroundColor, setBackgroundColor] = useState(
+		articleState.backgroundColor
 	);
-	const [newFontSize, setNewFontSize] = useState(fontSizeOptions[0]);
-	const [newFontColor, setNewFontColor] = useState(fontColors[0]);
-	const [newBackgroundColor, setNewBackgroundColor] = useState(
-		backgroundColors[0]
-	);
-	const [newContentWidt, setNewContentWidth] = useState(contentWidthArr[0]);
+	const [contentWidth, setContentWidth] = useState(articleState.contentWidth);
+	const sidebarRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				isOpen &&
+				sidebarRef.current &&
+				!sidebarRef.current.contains(event.target as Node)
+			) {
+				setIsOpen(false);
+			}
+		};
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [isOpen]);
 
 	const handleToggle = () => {
 		setIsOpen(!isOpen);
@@ -34,70 +63,92 @@ export const ArticleParamsForm = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+		const newState = {
+			fontFamilyOption: fontFamily,
+			fontSizeOption: fontSize,
+			fontColor: fontColor,
+			backgroundColor: backgroundColor,
+			contentWidth: contentWidth,
+		};
+		onApply(newState);
 	};
 
 	const handleReset = () => {
-		setNewFontFamilyOption(fontFamilyOptions[0]);
-		setNewFontSize(fontSizeOptions[0]);
-		setNewFontColor(fontColors[0]);
-		setNewBackgroundColor(backgroundColors[0]);
+		console.log('🔄 RESET - Resetting to defaults');
+		setFontFamily(fontFamilyOptions[0]);
+		setFontSize(fontSizeOptions[0]);
+		setFontColor(fontColors[0]);
+		setBackgroundColor(backgroundColors[0]);
+		setContentWidth(contentWidthArr[0]);
+		const defaultState = {
+			fontFamilyOption: fontFamilyOptions[0],
+			fontSizeOption: fontSizeOptions[0],
+			fontColor: fontColors[0],
+			backgroundColor: backgroundColors[0],
+			contentWidth: contentWidthArr[0],
+		};
+		onApply(defaultState);
 	};
+
 	return (
-		<>
+		<div ref={sidebarRef}>
 			<ArrowButton isOpen={isOpen} onClick={handleToggle} />
-			{isOpen && (
-				<aside
-					className={clsx(styles.container, {
-						[styles.container_open]: isOpen,
-					})}>
-					<form className={styles.form} onSubmit={handleSubmit}>
-						<Text size={31} weight={800} uppercase>
-							Задайте параметры
-						</Text>
-						<Select
-							options={fontFamilyOptions}
-							selected={newFontFamilyOptions}
-							title='шрифт'
-							onChange={setNewFontFamilyOption}
+			<aside
+				className={clsx(styles.container, isOpen && styles.container_open)}>
+				<form className={styles.form} onSubmit={handleSubmit}>
+					<Text size={31} weight={800} uppercase>
+						Задайте параметры
+					</Text>
+
+					<Select
+						options={fontFamilyOptions}
+						selected={fontFamily}
+						title='шрифт'
+						onChange={setFontFamily}
+					/>
+
+					<RadioGroup
+						selected={fontSize}
+						name='fontSize'
+						onChange={setFontSize}
+						options={fontSizeOptions}
+						title='размер шрифта'
+					/>
+
+					<Select
+						options={fontColors}
+						selected={fontColor}
+						title='цвет шрифта'
+						onChange={setFontColor}
+					/>
+
+					<Separator />
+
+					<Select
+						options={backgroundColors}
+						selected={backgroundColor}
+						title='цвет фона'
+						onChange={setBackgroundColor}
+					/>
+
+					<Select
+						options={contentWidthArr}
+						selected={contentWidth}
+						title='ширина контента'
+						onChange={setContentWidth}
+					/>
+
+					<div className={styles.bottomContainer}>
+						<Button
+							title='Сбросить'
+							htmlType='button'
+							type='clear'
+							onClick={handleReset}
 						/>
-						<RadioGroup
-							selected={newFontSize}
-							name='radio'
-							onChange={setNewFontSize}
-							options={fontSizeOptions}
-							title='размер шрифта'
-						/>
-						<Select
-							options={fontColors}
-							selected={newFontColor}
-							title='цвет шрифта'
-							onChange={setNewFontColor}
-						/>
-						<Separator />
-						<Select
-							options={backgroundColors}
-							selected={newBackgroundColor}
-							title='цвет фона'
-							onChange={setNewBackgroundColor}
-						/>
-						<Select
-							options={contentWidthArr}
-							selected={newContentWidt}
-							title='ширина контента'
-							onChange={setNewContentWidth}
-						/>
-						<div className={styles.bottomContainer}>
-							<Button
-								title='Сбросить'
-								htmlType='reset'
-								type='clear'
-								onClick={handleReset}
-							/>
-							<Button title='Применить' htmlType='submit' type='apply' />
-						</div>
-					</form>
-				</aside>
-			)}
-		</>
+						<Button title='Применить' htmlType='submit' type='apply' />
+					</div>
+				</form>
+			</aside>
+		</div>
 	);
 };
