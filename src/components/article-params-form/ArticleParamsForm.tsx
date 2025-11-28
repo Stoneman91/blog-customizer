@@ -72,7 +72,10 @@ export const ArticleParamsForm = ({
 						? `${styles.container} ${styles.container_open}`
 						: styles.container
 				}>
-				<form className={styles.form} onSubmit={handleSubmit}>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmit}
+					onReset={handleReset}>
 					<Text size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
@@ -113,7 +116,7 @@ export const ArticleParamsForm = ({
 					/>
 
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='clear' onClick={handleReset} />
+						<Button title='Сбросить' htmlType='reset' type='clear' />
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
